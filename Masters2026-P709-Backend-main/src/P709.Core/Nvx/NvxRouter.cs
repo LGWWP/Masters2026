@@ -60,13 +60,9 @@ public sealed class NvxRouter(NvxConfig? config, INvxClient? receiver, TimeProvi
             return false;
         }
 
-        // TODO: Lab 2.2b - Route the source's multicast stream to the receiver
-        // Hint: Three calls on the receiver, in this order: point it at the route's MulticastAddress (SetReceiveMulticastAddressAsync),
-        //       start the receive stream, then enable its preview images.
-        // Ref:  INvxClient
-        // Add your work below this line
-
-        // Lab 2.2b - End
+        await receiver.SetReceiveMulticastAddressAsync(route.MulticastAddress, cancellationToken);
+        await receiver.StartReceiveAsync(cancellationToken);
+        await receiver.SetPreviewEnabledAsync(true, cancellationToken);
 
         return true;
     }
@@ -81,11 +77,14 @@ public sealed class NvxRouter(NvxConfig? config, INvxClient? receiver, TimeProvi
             return false;
         }
 
-        // TODO: Lab 2.3b - Start or stop the receiver's stream
-        // Hint: One line each way: StartReceiveAsync or StopReceiveAsync on the receiver.
-        // Add your work below this line
-
-        // Lab 2.3b - End
+        if (isRunning)
+        {
+            await receiver.StartReceiveAsync(cancellationToken);
+        }
+        else
+        {
+            await receiver.StopReceiveAsync(cancellationToken);
+        }
 
         return true;
     }
@@ -115,15 +114,20 @@ public sealed class NvxRouter(NvxConfig? config, INvxClient? receiver, TimeProvi
             return null;
         }
 
-        // TODO: Lab 2.4b - Fetch the receiver's preview image
-        // Hint: Read the receiver's preview (GetPreviewAsync). If it is not enabled, or it has no Largest() image, throw an
-        //       NvxPreviewUnavailableException saying which. Otherwise download that image's Url with DownloadImageAsync:
-        //       the receiver's client holds the login, which is why the program fetches the image for the panel.
-        // Add your work below this line
+        var preview = await receiver.GetPreviewAsync(cancellationToken);
 
-        // Lab 2.4b - End
+        if (!preview.IsEnabled)
+        {
+            throw new NvxPreviewUnavailableException("The NVX preview output is disabled.");
+        }
 
-        return null;
+        var image = preview.Largest();
+        if (image is null)
+        {
+            throw new NvxPreviewUnavailableException("The NVX has no preview image ready yet.");
+        }
+
+        return await receiver.DownloadImageAsync(image.Url, cancellationToken);
     }
 }
 

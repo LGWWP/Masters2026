@@ -1,0 +1,103 @@
+﻿using Newtonsoft.Json;
+
+namespace P709.Core.Nvx;
+
+/// <summary>
+/// Builds the JSON bodies POSTed to an NVX's <c>/Device</c> endpoint. Every body is a "CresNext" object rooted at <c>Device</c>
+/// and holding only the properties to change: the NVX applies just what it is sent.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Each body is written as a C# anonymous object with the same shape as the JSON, then serialised with Newtonsoft.Json
+/// (the serialiser used throughout P709). Read them side by side: every <c>{ }</c> in the JSON is a <c>new { ... }</c>, every
+/// <c>[ ]</c> is a <c>new[] { ... }</c>, and each property name is written exactly as the NVX expects it (PascalCase).
+/// </para>
+/// <para>
+/// Never send an empty object: the NVX treats <c>{"Device":{"Preview":{}}}</c> as "delete Preview". Building every body here,
+/// from a fixed shape, keeps that mistake out of the client.
+/// Arrays such as <c>Streams</c> are addressed by position; these all target the first stream (index 0), the only one an NVX
+/// endpoint has.
+/// </para>
+/// </remarks>
+public static class NvxRequests
+{
+    /// <summary>
+    /// Points the receiver at a source's multicast stream: <c>Device.StreamReceive.Streams[0].StreamLocation</c> set to
+    /// <c>rtsp://&lt;multicast address&gt;</c>.
+    /// </summary>
+    /// <remarks>
+    /// A multicast address can only be set on a transmitter; a receiver refuses <c>StreamReceive.Streams[0].MulticastAddress</c>
+    /// with "Generic error". A receiver is routed through <c>StreamLocation</c> instead.
+    /// </remarks>
+    /// <param name="multicastAddress">The source's multicast address, for example <c>239.8.0.21</c>.</param>
+    public static string SetReceiveMulticastAddress(string multicastAddress)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(multicastAddress);
+
+        var body = new
+        {
+            Device = new
+            {
+                StreamReceive = new
+                {
+                    Streams = new[] { new { StreamLocation = $"rtsp://{multicastAddress}" } }
+                }
+            }
+        };
+
+        return JsonConvert.SerializeObject(body);
+    }
+
+    /// <summary>Starts the receiver's stream: <c>Device.StreamReceive.Streams[0].Start = true</c>.</summary>
+    public static string StartReceive()
+    {
+        var body = new
+        {
+            Device = new
+            {
+                StreamReceive = new
+                {
+                    Streams = new[] { new { Start = true } }
+                }
+            }
+        };
+
+        return JsonConvert.SerializeObject(body);
+    }
+
+    /// <summary>Stops the receiver's stream: <c>Device.StreamReceive.Streams[0].Stop = true</c>.</summary>
+    /// <remarks>A finished example of a request body: <c>{"Device":{"StreamReceive":{"Streams":[{"Stop":true}]}}}</c>.</remarks>
+    public static string StopReceive()
+    {
+        var body = new
+        {
+            Device = new
+            {
+                StreamReceive = new
+                {
+                    Streams = new[] { new { Stop = true } }
+                }
+            }
+        };
+
+        return JsonConvert.SerializeObject(body);
+    }
+
+    /// <summary>Turns the preview image generator on or off: <c>Device.Preview.IsPreviewOutputEnabled</c>.</summary>
+    /// <param name="isEnabled">True to produce preview images, false to stop.</param>
+    public static string SetPreviewEnabled(bool isEnabled)
+    {
+        var body = new
+        {
+            Device = new
+            {
+                Preview = new
+                {
+                    IsPreviewOutputEnabled = isEnabled
+                }
+            }
+        };
+
+        return JsonConvert.SerializeObject(body);
+    }
+}

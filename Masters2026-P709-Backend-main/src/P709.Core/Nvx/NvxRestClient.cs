@@ -90,25 +90,21 @@ public sealed class NvxRestClient : INvxClient, IDisposable
             await GetLoginPageAsync(cancellationToken);
 
             // Step 2: send the username and password.
-            // TODO: Lab 2.1a - Send the username and password to the NVX
-            // Hint: Create a POST request to LoginPath whose Content is the credentials as a web form: a FormUrlEncodedContent
-            //       built from a Dictionary holding "login" (_username) and "passwd" (_password). Send it with SendAsync and
-            //       keep the reply in a variable called loginResponse: step 3 checks it.
-            //       Dispose both the request and the reply (using var ...).
-            // Ref:  DM-NVX REST API, Authentication
-            //       https://sdkcon78221.crestron.com/sdk/DM_NVX_REST_API/Content/Topics/Authentication.htm
-            // Add your work below this line
-
-            // Lab 2.1a - End
+            using var loginRequest = new HttpRequestMessage(HttpMethod.Post, LoginPath)
+            {
+                Content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["login"] = _username,
+                    ["passwd"] = _password
+                })
+            };
+            using var loginResponse = await SendAsync(loginRequest, cancellationToken);
 
             // Step 3: check the NVX accepted the login.
-            // TODO: Lab 2.1b - Check the login worked
-            // Hint: SendAsync has stored every cookie the reply set. The NVX only sets the AuthByPasswd cookie when the
-            //       username and password are right, so check for it with HasCookie(AuthCookieName). If it is missing, throw an
-            //       NvxException that names the NVX (Address) and the user, and include the reply's status code to help.
-            // Add your work below this line
-
-            // Lab 2.1b - End
+            if (!HasCookie(AuthCookieName))
+            {
+                throw new NvxException($"The NVX at {Address} rejected the login for \"{_username}\". HTTP {(int)loginResponse.StatusCode}.");
+            }
 
             _isLoggedIn = true;
         }

@@ -34,36 +34,35 @@ public static class NvxRequests
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(multicastAddress);
 
-        // TODO: Lab 2.2a - Build the request that routes the receiver to a multicast address
-        // Hint: The receiver is routed by its StreamLocation: an rtsp:// URL holding the multicast address. The NVX expects:
-        //           {"Device":{"StreamReceive":{"Streams":[{"StreamLocation":"rtsp://239.8.0.21"}]}}}
-        //       Build a C# anonymous object with exactly the same shape, then turn it into a string with
-        //       JsonConvert.SerializeObject(...). Translate the JSON from the outside in:
-        //           { "Name": ... }   becomes   new { Name = ... }
-        //           [ { ... } ]       becomes   new[] { new { ... } }    (Streams is an array holding one stream)
-        //       Build the value from the multicastAddress parameter ($"rtsp://{multicastAddress}"), not a fixed address.
-        //       StopReceive, further down, is a finished example of the same shape.
-        // Ref:  DM-NVX REST API, Objects > StreamReceive
-        // Add your work below this line
+        var body = new
+        {
+            Device = new
+            {
+                StreamReceive = new
+                {
+                    Streams = new[] { new { StreamLocation = $"rtsp://{multicastAddress}" } }
+                }
+            }
+        };
 
-        // Lab 2.2a - End
-
-        return null;
+        return JsonConvert.SerializeObject(body);
     }
 
     /// <summary>Starts the receiver's stream: <c>Device.StreamReceive.Streams[0].Start = true</c>.</summary>
     public static string StartReceive()
     {
-        // TODO: Lab 2.3a - Build the request that starts the receiver's stream
-        // Hint: Start is a "trigger" property: setting it to true performs the action. The NVX expects:
-        //           {"Device":{"StreamReceive":{"Streams":[{"Start":true}]}}}
-        //       It is the same shape as StopReceive below, with Start instead of Stop.
-        // Ref:  DM-NVX REST API, Objects > StreamReceive
-        // Add your work below this line
+        var body = new
+        {
+            Device = new
+            {
+                StreamReceive = new
+                {
+                    Streams = new[] { new { Start = true } }
+                }
+            }
+        };
 
-        // Lab 2.3a - End
-
-        return null;
+        return JsonConvert.SerializeObject(body);
     }
 
     /// <summary>Stops the receiver's stream: <c>Device.StreamReceive.Streams[0].Stop = true</c>.</summary>
@@ -88,16 +87,17 @@ public static class NvxRequests
     /// <param name="isEnabled">True to produce preview images, false to stop.</param>
     public static string SetPreviewEnabled(bool isEnabled)
     {
-        // TODO: Lab 2.4a - Build the request that enables or disables the preview images
-        // Hint: The NVX expects:
-        //           {"Device":{"Preview":{"IsPreviewOutputEnabled":true}}}
-        //       Preview is not a stream, so there is no Streams array: the property sits directly inside Preview.
-        //       Use the isEnabled parameter for the value.
-        // Ref:  DM-NVX REST API, Objects > Preview
-        // Add your work below this line
+        var body = new
+        {
+            Device = new
+            {
+                Preview = new
+                {
+                    IsPreviewOutputEnabled = isEnabled
+                }
+            }
+        };
 
-        // Lab 2.4a - End
-
-        return null;
+        return JsonConvert.SerializeObject(body);
     }
 }
