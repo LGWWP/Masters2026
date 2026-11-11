@@ -77,7 +77,7 @@ public sealed record SourceConfig(
 public enum SourceType
 {
     /// <summary>A television.</summary>
-    [EnumMember(Value = "tv")]
+    [EnumMember(Value = "tv")]   
     Tv,
 
     /// <summary>An overhead projector.</summary>
