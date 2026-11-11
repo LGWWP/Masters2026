@@ -19,3 +19,9 @@ export function applyMute(muted: boolean): void {
 // Hint: The volume level should be clamped between 0 and 100
 //       and rounded to the nearest integer.
 // UI Lab 1.4a - End
+
+// REF: Lab 1.4a
+export function applyVolume(level: number): void {
+  volumeState.level = Math.max(0, Math.min(100, Math.round(level)));
+}
+// REF: Lab 1.4a - End

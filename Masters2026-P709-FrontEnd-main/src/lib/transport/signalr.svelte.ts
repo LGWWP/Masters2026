@@ -126,6 +126,25 @@ export function initSignalR(url: string): void {
   //       These options are for logging level and automatic reconnect behavior.
   // UI Lab 1.1 - End
 
+  // REF UI Lab 1.1
+  hub = new signalR.HubConnectionBuilder()
+    .withUrl(url)
+    // SignalR's built-in logger. LogLevel.Information prints connection
+    // lifecycle events (connecting / connected / reconnecting) to the
+    // browser console. Bump to LogLevel.Debug or Trace when you want to see
+    // negotiation / transport / keep-alive detail. LogLevel.None suppresses
+    // everything — useful in production, noisy during learning.
+    .configureLogging(signalR.LogLevel.Information)
+    .withAutomaticReconnect({
+      // Retry every 1s for the first 10 attempts, then every 5s forever.
+      // This is a good default for a control panel that must "eventually
+      // heal" without any user action.
+      nextRetryDelayInMilliseconds: (ctx) =>
+        ctx.previousRetryCount < 10 ? 1000 : 5000
+    })
+    .build();
+  // REF UI Lab 1.1 – End
+
   // ---------------------------------------------------------------------------
   // Inbound: server pushed a page change
   // ---------------------------------------------------------------------------
@@ -215,6 +234,18 @@ function fetchRoomConfiguration(): void {
   //       Log the config to console
   //       Apply the configuration to the appropriate stores
   // UI Lab 2 - End
+
+  // REF UI Lab 1.2
+  hub
+    .invoke('GetRoomConfiguration')
+    .then((config: unknown) => {
+      console.log('[SignalR ←] GetRoomConfiguration', config);
+      applyRoomConfiguration(config);
+    })
+    .catch((err) => {
+      console.warn('GetRoomConfiguration invoke failed', err);
+    });
+  // END REF UI Lab 1.2
 }
 
 // -----------------------------------------------------------------------------

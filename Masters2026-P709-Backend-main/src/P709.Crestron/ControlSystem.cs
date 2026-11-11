@@ -86,6 +86,25 @@ public class ControlSystem : CrestronControlSystem
 
         // Lab 0.2 - End
 
+        // REF: Lab 0.2 - Start the non-Crestron web host on the configured port
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await WebHost.RunAsync(roomConfiguration, loggerFactory, settings.ApiPort, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                ErrorLog.Notice("Normal Shutdown");
+                // Normal shutdown.
+            }
+            catch (Exception exception)
+            {
+                ErrorLog.Error("Web host failed: {0}", exception);
+            }
+        }, cancellationToken);
+        // REF: Lab 0.2 - End
+
         ErrorLog.Notice($"Control System Initialized (API port {settings.ApiPort})");
     }
 
@@ -97,6 +116,13 @@ public class ControlSystem : CrestronControlSystem
         // Add your work below this line
 
         // Lab 1.1d - End
+
+        // REF: Lab 1.1d - Publish the connection details whenever the panel comes online
+        if (args.DeviceOnLine && _publisher is not null && !_publisher.Publish())
+        {
+            ErrorLog.Warn("No host address available to publish SignalR connection details");
+        }
+        // REF: Lab 1.1d - End
     }
 
     private void OnProgramStatusEvent(eProgramStatusEventType programEventType)

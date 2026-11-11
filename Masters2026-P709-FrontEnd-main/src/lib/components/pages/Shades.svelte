@@ -339,6 +339,17 @@
             <!-- TODO: UI Lab 1.5aa - Add the shade selection button -->
             <!-- Hint: Use a button with class "scope-tab" and bind its active state to selectedScope -->
             <!-- UI Lab 1.5aa - End -->
+            <!-- REF: UI Lab 1.5aa -->
+            <button
+              type="button"
+              class="scope-tab"
+              class:active={selectedScope === shade.id}
+              aria-current={selectedScope === shade.id ? "true" : undefined}
+              onclick={() => setScope(shade.id)}
+            >
+              {shade.name}
+            </button>
+            <!-- REF: UI Lab 1.5aa - End -->
           {/each}
         </nav>
       </Card>

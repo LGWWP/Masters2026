@@ -175,6 +175,9 @@
     <!-- TODO: UI Lab 1.4c - Add the volume component to the footer from 'src/lib/components/layout'
          Hint: The component doesn't need any props to be passed in.
          UI Lab 1.4c - End -->
+    <!-- REF: UI Lab 1.4c -->
+    <VolumeControl />
+    <!-- REF: UI Lab 1.4c - End -->
   </div>
 </footer>
 

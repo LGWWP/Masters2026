@@ -52,6 +52,25 @@
   <!-- TODO: UI Lab 1.5ab - Add a slider to control the shade position -->
   <!-- Hint: Use an input of type range. Bind its value to the current draft or reported percentage. -->
   <!-- UI Lab 1.5ab - End -->
+  <!-- REF: UI Lab 1.5ab -->
+  <input
+    type="range"
+    class="shade-slider"
+    min="0"
+    max="100"
+    step="1"
+    value={value ?? 0}
+    style="--pct: {value ?? 0}%"
+    aria-label={kind === "tilt" ? "Slat tilt" : label}
+    oninput={(event) => oninput(Number(event.currentTarget.value))}
+    onchange={(event) => oncommit(Number(event.currentTarget.value))}
+    {disabled}
+  />
+  <div class="slider-ends">
+    <span>Closed</span>
+    <span>Open</span>
+  </div>
+  <!-- REF: UI Lab 1.5ab - End -->
 {/snippet}
 
 <!-- ── Quick actions ──────────────────────────────────────────────────────── -->

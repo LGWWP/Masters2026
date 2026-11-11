@@ -28,6 +28,17 @@ onHubReady((hub) => {
   // TODO: UI Lab 1.4b - Register inbound hub handler for volume changes 
   // Hint: Use the mute handler above as a reference.
   // UI Lab 1.4b - End
+
+  // REF UI Lab 1.4b
+  hub.on('VolumeLevelChanged', (levelPercent: unknown) => {
+    console.log('[SignalR ←] VolumeLevelChanged', levelPercent);
+    if (typeof levelPercent !== 'number') {
+      console.warn('SignalR: bad VolumeLevelChanged payload', levelPercent);
+      return;
+    }
+    applyVolume(levelPercent);
+  });
+  // REF UI Lab 1.4b - End
 });
 
 export function setVolume(levelPercent: number): void {
