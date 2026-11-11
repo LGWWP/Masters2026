@@ -1,0 +1,42 @@
+{
+  "name": "crestron-ui-p709",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint . --ext .js,.ts,.svelte",
+    "lint:fix": "eslint . --ext .js,.ts,.svelte --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pack:ch5z": "node scripts/pack-ch5z.mjs",
+    "package:ch5z": "npm run build && node scripts/pack-ch5z.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tsconfig/svelte": "^5.0.8",
+    "@types/node": "^24.13.2",
+    "archiver": "^8.0.0",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-svelte": "^3.20.0",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.5",
+    "prettier-plugin-svelte": "^4.1.1",
+    "svelte": "^5.56.4",
+    "svelte-check": "^4.7.1",
+    "svelte-eslint-parser": "^1.8.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.63.0",
+    "vite": "^8.1.1"
+  },
+  "dependencies": {
+    "@crestron/ch5-crcomlib": "^2.20.0",
+    "@crestron/ch5-webxpanel": "^2.8.0",
+    "@microsoft/signalr": "^10.0.11"
+  }
+}

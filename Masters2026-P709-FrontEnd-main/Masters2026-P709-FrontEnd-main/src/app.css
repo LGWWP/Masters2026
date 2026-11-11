@@ -1,0 +1,140 @@
+/*
+ * Theme tokens. The active theme is set by stores/theme.svelte.ts via
+ * <html data-theme="light|dark">. Dark is the default when no attribute is set.
+ *
+ * Colors that need variable opacity are stored as space-separated RGB channels
+ * and used as `rgb(var(--ink) / 0.5)`.
+ */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --ink: 255 255 255;          /* foreground (text, subtle fills, borders) */
+  --panel: 28 28 30;           /* header / footer / menu surface */
+  --surface: 30 30 32;         /* cards and strips */
+  --surface-hi: 52 52 56;      /* active cards, table */
+  --line: 58 58 60;            /* floor-plan lines */
+  --line-hi: 84 84 88;         /* floor-plan outlines */
+  --muted-ink: 142 142 147;    /* floor-plan labels */
+  --fixture-off: 44 44 46;
+  --fixture-off-ink: 160 160 165;
+  --plan-bg: 18 18 20;
+  --accent-rgb: 0 170 230;
+  --brand-rgb: 0 170 230;      /* active nav item */
+
+  --page-bg: #0b0b0c;
+  --aurora-1: transparent;
+  --aurora-2: transparent;
+  --aurora-3: rgb(0 170 230 / 0.08);
+
+  --nav-active-bg: rgb(var(--brand-rgb) / 0.65);
+  --nav-active-border: rgb(var(--brand-rgb) / 0.85);
+  --brand-ink: #29b6f6;
+
+  --badge-lit-bg: rgb(234 179 8 / 0.15);
+  --badge-lit-ink: #facc15;
+  --danger-bg: rgb(255 80 80 / 0.1);
+  --danger-bg-strong: rgb(255 80 80 / 0.25);
+  --danger-ink: #ff9c9c;
+  --ok-bg: rgb(80 220 120 / 0.15);
+  --ok-ink: #7fe2a3;
+  --bad-bg: rgb(255 100 100 / 0.15);
+
+  --overlay: rgb(0 0 0 / 0.45);
+  --shadow-rgb: 0 0 0;
+  --table-shadow: 0 0 30px rgb(0 0 0 / 0.5);
+  --logo-filter: none;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --ink: 28 28 30;
+  --panel: 255 255 255;
+  --surface: 255 255 255;
+  --surface-hi: 255 255 255;
+  --line: 190 190 196;
+  --line-hi: 150 150 158;
+  --muted-ink: 85 85 92;
+  --fixture-off: 229 229 234;
+  --fixture-off-ink: 90 90 95;
+  --plan-bg: 228 231 236;
+  --accent-rgb: 0 133 200;
+  --brand-rgb: 0 133 200;
+
+  --page-bg: #d9e1ea;
+  --aurora-1: rgb(0 133 200 / 0.18);
+  --aurora-2: rgb(120 160 220 / 0.18);
+  --aurora-3: rgb(0 170 230 / 0.25);
+
+  --nav-active-bg: rgb(var(--brand-rgb) / 0.9);
+  --nav-active-border: rgb(var(--brand-rgb));
+  --brand-ink: #0073b3;
+
+  /* Solid white tiles on the light grey page */
+  --bg-card-active: rgb(255 255 255 / 0.9);
+
+  --badge-lit-bg: rgb(202 138 4 / 0.15);
+  --badge-lit-ink: #a16207;
+  --danger-bg: rgb(220 38 38 / 0.08);
+  --danger-bg-strong: rgb(220 38 38 / 0.2);
+  --danger-ink: #b91c1c;
+  --ok-bg: rgb(22 163 74 / 0.12);
+  --ok-ink: #15803d;
+  --bad-bg: rgb(220 38 38 / 0.1);
+
+  --overlay: rgb(0 0 0 / 0.3);
+  --shadow-rgb: 0 0 0;
+  --table-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+  --logo-filter: brightness(0) opacity(0.8); /* the logo asset is white-on-transparent */
+}
+
+:root {
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  /* Derived tokens used by the Lights page */
+  --accent-cyan: rgb(var(--accent-rgb));
+  --accent-cyan-glow: rgb(var(--accent-rgb) / 0.4);
+  --text-primary: rgb(var(--ink));
+  --text-muted: rgb(var(--ink) / 0.5);
+  --bg-card-active: rgb(var(--surface-hi) / 0.35);
+  --border-card-active: rgb(var(--accent-rgb) / 0.3);
+  --bg-inactive: rgb(var(--ink) / 0.06);
+  --border-inactive: rgb(var(--ink) / 0.08);
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color: rgb(var(--ink) / 0.92);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: rgb(var(--ink) / 0.92);
+  background-color: var(--page-bg);
+  background-image:
+    radial-gradient(at 0% 0%, var(--aurora-1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, var(--aurora-2) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, var(--aurora-3) 0px, transparent 50%);
+  background-size: 180% 180%;
+  animation: auroraShift 16s ease infinite alternate;
+}
+
+@keyframes auroraShift {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 100%; }
+}
